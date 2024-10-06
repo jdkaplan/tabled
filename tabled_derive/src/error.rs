@@ -53,16 +53,18 @@ impl std::fmt::Display for Error {
 impl std::error::Error for Error {}
 
 pub fn abort(err: Error) -> ! {
+    use proc_macro_error2::abort;
+
     match err {
         Error::Syn(err) => {
-            proc_macro_error::abort! {err.span(), "{}", err}
+            abort! {err.span(), "{}", err}
         }
         Error::Custom { span, error, help } => match help {
             Some(help) => {
-                proc_macro_error::abort! {span, "{}",  error; help="{}", help}
+                abort! {span, "{}",  error; help="{}", help}
             }
             None => {
-                proc_macro_error::abort! {span, "{}",  error}
+                abort! {span, "{}",  error}
             }
         },
     }
